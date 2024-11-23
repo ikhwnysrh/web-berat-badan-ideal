@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Penghitung Berat Badan Ideal</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="header">
+      <h1>
+        <i class="fas fa-utensils"></i>
+        Hitung Berat Badan Ideal
+      </h1>
+    </div>
+    <div class="breadcrumb">
+      <a href="kontak.html" style="text-decoration: none; color: #f58220">
+        Kontak Kami
+      </a>
+    </div>
+    <div class="container">
+      <h2>Hitung Berat Badan Ideal</h2>
+      <p class="description">
+        Web ini membantu menghitung berat badan ideal berdasarkan tinggi badan
+        dengan antarmuka sederhana dan responsif.
+      </p>
+      <div class="image-container">
+        <img
+          alt="Illustrasi pria dan wanita berdiri berdampingan"
+          height="200"
+          src="https://storage.googleapis.com/a1aa/image/LmDOVuZT8HrNBhDShgIwqSyb7Z9WrSkOACJXOSdYPjeDGy5JA.jpg"
+          width="200"
+        />
+      </div>
+      <form id="bbiForm">
+        <div class="form-group">
+          <label for="nama">Nama Lengkap</label>
+          <input
+            id="nama"
+            name="nama"
+            placeholder="Masukkan Nama Lengkap Anda"
+            type="text"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="usia">Usia (tahun):</label>
+          <input type="number" id="usia" placeholder="Masukkan Usia" required>
+        </div>
+
+        <div class="form-group">
+          <label for="gender">Jenis Kelamin:</label>
+          <select id="gender">
+              <option value="male">Laki-laki</option>
+              <option value="female">Perempuan</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="aktivitas">Tingkat Aktivitas:</label>
+          <select id="aktivitas">
+              <option value="1.2">Sangat jarang olahraga</option>
+              <option value="1.375">Jarang olahraga (1-3 kali/minggu)</option>
+              <option value="1.55">Cukup olahraga (3-5 kali/minggu)</option>
+              <option value="1.725">Sering olahraga (6-7 kali/minggu)</option>
+              <option value="1.9">Sangat sering olahraga (2 kali/hari)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="bb">Berat Badan (kg):</label>
+          <input
+            type="number"
+            id="bb"
+            placeholder="Masukkan Berat Badan"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <label for="tb">Tinggi Badan (cm):</label>
+          <input
+            type="number"
+            id="tb"
+            placeholder="Masukkan Tinggi Badan"
+            required
+          />
+        </div>
+        <div class="form-group">
+          <button type="button" class="submit-btn" onclick="hitungBBI()">
+            Hitung
+          </button>
+          <div class="result" id="result"></div>
+        </div>
+      </form>
+    </div>
+    <script>
+      function hitungBBI() {
+          const bb = parseFloat(document.getElementById('bb').value);
+          const tb = parseFloat(document.getElementById('tb').value) / 100; // Konversi cm ke meter
+          const usia = parseInt(document.getElementById('usia').value);
+          const gender = document.getElementById('gender').value;
+          const aktivitas = parseFloat(document.getElementById('aktivitas').value);
+
+          if (isNaN(bb) || isNaN(tb) || isNaN(usia)) {
+              alert('Masukkan data yang valid!');
+              return;
+          }
+
+          // Hitung Berat Badan Ideal
+          const bbi = (tb * 100 - 100) - (0.1 * (tb * 100 - 100));
+
+          // Hitung Indeks Massa Tubuh (IMT)
+          const imt = bb / (tb * tb);
+
+          // Tentukan Status Gizi Berdasarkan IMT
+          let statusGizi;
+          if (imt < 18.5) statusGizi = "Status gizi Kekurangan berat badan";
+          else if (imt < 24.9) statusGizi = "status gizi normal";
+          else if (imt < 29.9) statusGizi = "Status gizi Kelebihan berat badan";
+          else statusGizi = "Status gizi Obesitas";
+
+          // Hitung Energi Harian (Harris-Benedict)
+          let bmr;
+          if (gender === "male") {
+              bmr = 66 + (13.7 * bb) + (5 * tb * 100) - (6.8 * usia);
+          } else {
+              bmr = 655 + (9.6 * bb) + (1.8 * tb * 100) - (4.7 * usia);
+          }
+          const kebutuhanEnergi = bmr * aktivitas;
+
+          // Hitung Distribusi Makronutrien
+          const protein = (0.15 * kebutuhanEnergi) / 4;
+          const karbohidrat = (0.6 * kebutuhanEnergi) / 4;
+          const lemak = (0.25 * kebutuhanEnergi) / 9;
+
+          // Tampilkan Hasil
+          document.getElementById('result').innerHTML = `
+              <p>Berat Badan Ideal Anda: <strong>${bbi.toFixed(2)} kg</strong></p>
+              <p>Indeks Massa Tubuh (IMT): <strong>${imt.toFixed(2)}</strong> (${statusGizi})</p>
+              <p>Kebutuhan Energi Harian: <strong>${kebutuhanEnergi.toFixed(2)} kkal</strong></p>
+              <p>Protein: <strong>${protein.toFixed(2)} gram</strong></p>
+              <p>Karbohidrat: <strong>${karbohidrat.toFixed(2)} gram</strong></p>
+              <p>Lemak: <strong>${lemak.toFixed(2)} gram</strong></p>
+          `;
+      }
+  </script>
+  </body>
+</html>
